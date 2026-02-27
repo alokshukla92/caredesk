@@ -39,4 +39,4 @@ Thumbs.db
 *.sln
 *.sw?
 CLAUDE.md
-.build
+.build/*

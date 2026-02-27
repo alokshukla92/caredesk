@@ -142,33 +142,48 @@ def handler(request: Request):
     # ── Debug: Who Am I ───────────────────────────────────────────
 
     if path == "/api/debug/whoami" and method == "GET":
-        from services.auth_service import get_current_user, get_clinic_id
         try:
-            user = get_current_user(app)
-            user_id = str(user.get("user_id", "")) if user else None
-
-            # Manually trace clinic lookup
             trace = []
-            zcql = app.zcql()
 
+            # 0. Dump ALL SDK-relevant headers from request
+            sdk_headers = {}
+            for h in ["X-ZC-ProjectId", "X-ZC-Project-Domain", "X-ZC-Project-Key",
+                       "X-ZC-Environment", "X-ZC-Admin-Cred-Type", "X-ZC-User-Cred-Type",
+                       "X-ZC-Admin-Cred-Token", "X-ZC-User-Cred-Token", "x-zc-cookie",
+                       "X-ZC-User-Type", "Authorization", "Cookie"]:
+                val = request.headers.get(h, "")
+                if val:
+                    # Truncate sensitive values
+                    if "token" in h.lower() or "cookie" in h.lower() or h == "Authorization" or h == "Cookie":
+                        sdk_headers[h] = val[:60] + "..." if len(val) > 60 else val
+                    else:
+                        sdk_headers[h] = val
+
+            # 1. Raw SDK get_current_user
+            raw_user = None
+            try:
+                auth_svc = app.authentication()
+                raw_user = auth_svc.get_current_user()
+                trace.append(f"get_current_user() OK: user_id={raw_user.get('user_id')}, email={raw_user.get('email_id')}")
+            except Exception as auth_err:
+                trace.append(f"get_current_user() FAILED: {auth_err}")
+
+            user_id = str(raw_user.get("user_id", "")) if raw_user else None
+
+            # 2. Direct ZCQL lookup
+            zcql = app.zcql()
             if user_id:
-                trace.append(f"Looking up clinic with admin_user_id = '{user_id}'")
+                trace.append(f"ZCQL: WHERE admin_user_id = '{user_id}'")
                 lookup = zcql.execute_query(
                     f"SELECT ROWID, name, admin_user_id FROM Clinics "
                     f"WHERE admin_user_id = '{user_id}'"
                 )
-                trace.append(f"Query returned: {lookup}")
                 if lookup and len(lookup) > 0:
-                    trace.append(f"Found clinic: {lookup[0]['Clinics']}")
+                    trace.append(f"MATCH: {lookup[0]['Clinics']}")
                 else:
-                    trace.append("No clinic found for this user_id")
-            else:
-                trace.append("No user_id available")
+                    trace.append("NO MATCH — this user has no clinic")
 
-            # Also call get_clinic_id to see what it returns
-            clinic_id, clinic_user = get_clinic_id(app, request)
-            trace.append(f"get_clinic_id returned: clinic_id={clinic_id}")
-
+            # 3. All clinics
             clinics = zcql.execute_query(
                 "SELECT ROWID, name, slug, admin_user_id FROM Clinics"
             )
@@ -181,14 +196,11 @@ def handler(request: Request):
                     "admin_user_id": c["admin_user_id"],
                     "match": c["admin_user_id"] == user_id,
                 })
+
             return make_response(jsonify({
-                "user_from_sdk": {
-                    "user_id": user_id,
-                    "email": user.get("email_id") if user else None,
-                },
-                "resolved_clinic_id": clinic_id,
-                "host": request.headers.get("Host", ""),
-                "is_local_dev": request.headers.get("Host", "").startswith("localhost") or request.headers.get("Host", "").startswith("127.0.0.1"),
+                "user_id": user_id,
+                "email": raw_user.get("email_id") if raw_user else None,
+                "sdk_headers": sdk_headers,
                 "trace": trace,
                 "clinics_in_db": clinic_list,
             }), 200)

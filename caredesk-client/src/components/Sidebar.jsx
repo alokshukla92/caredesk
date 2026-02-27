@@ -16,10 +16,19 @@ const navItems = [
 
 export default function Sidebar() {
   const handleLogout = () => {
-    if (window.catalyst?.auth) {
-      window.catalyst.auth.signOut('/__catalyst/auth/login');
+    sessionStorage.clear();
+    // Clear all cookies (including for /app/ and / paths)
+    document.cookie.split(';').forEach((c) => {
+      const name = c.split('=')[0].trim();
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/app/`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/app`;
+    });
+    // Use Catalyst SDK signOut if available, otherwise redirect to login
+    if (window.catalyst?.auth?.signOut) {
+      window.catalyst.auth.signOut(import.meta.env.BASE_URL || '/app/');
     } else {
-      window.location.href = '/login';
+      window.location.href = '/__catalyst/auth/login';
     }
   };
 

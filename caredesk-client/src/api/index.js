@@ -1,29 +1,14 @@
 import { API_BASE } from '../utils/constants';
 
-const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
 export async function fetchAPI(path, options = {}) {
   try {
-    let headers = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
-
-    // In production only, attach Catalyst auth token
-    if (!isDev && window.catalyst?.auth?.generateAuthToken) {
-      try {
-        const response = await window.catalyst.auth.generateAuthToken();
-        if (response?.access_token) {
-          headers['Authorization'] = response.access_token;
-        }
-      } catch (e) {
-        console.warn('Auth token generation failed:', e);
-      }
-    }
-
     const res = await fetch(`${API_BASE}${path}`, {
       ...options,
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      credentials: 'same-origin',
     });
 
     const data = await res.json();
