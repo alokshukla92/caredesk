@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "targets": [
+      "ragnar_hackathon_alok_swapnil_function"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "caredesk-client/dist"
+  },
+  "slate": [
+    {
+      "name": "caredesk-client",
+      "source": "/Users/alokshukla/Desktop/Personal/CatalystZoho/MediQ/caredesk-client"
+    }
+  ],
+  "apig": {
+    "enabled": false
+  }
+}
