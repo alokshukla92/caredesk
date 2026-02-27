@@ -17,7 +17,7 @@ const navItems = [
 export default function Sidebar() {
   const handleLogout = () => {
     if (window.catalyst?.auth) {
-      window.catalyst.auth.signOut('/');
+      window.catalyst.auth.signOut('/__catalyst/auth/login');
     } else {
       window.location.href = '/login';
     }

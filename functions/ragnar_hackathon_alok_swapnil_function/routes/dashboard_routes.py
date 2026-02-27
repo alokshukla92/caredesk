@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 def get_stats(app, request):
     """GET /api/dashboard/stats — Today's dashboard statistics."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 

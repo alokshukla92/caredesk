@@ -68,9 +68,12 @@ def create(app, request):
 def get_mine(app, request):
     """GET /api/clinics/me — Get current user's clinic."""
     try:
-        clinic_id, user = get_clinic_id(app)
+        clinic_id, user = get_clinic_id(app, request)
+        user_id = str(user.get("user_id", "")) if user else None
+        logger.info(f"get_mine: user_id={user_id}, clinic_id={clinic_id}")
+
         if not clinic_id:
-            return not_found("No clinic found. Please register first.")
+            return not_found(f"No clinic found. Please register first. (user_id={user_id})")
 
         zcql = app.zcql()
         result = zcql.execute_query(
@@ -91,6 +94,7 @@ def get_mine(app, request):
             "email": clinic["email"],
             "logo_url": clinic["logo_url"],
             "created_time": clinic["CREATEDTIME"],
+            "_debug_user_id": user_id,
         })
 
     except Exception as e:
@@ -101,7 +105,7 @@ def get_mine(app, request):
 def update_mine(app, request):
     """PUT /api/clinics/me — Update current user's clinic."""
     try:
-        clinic_id, user = get_clinic_id(app)
+        clinic_id, user = get_clinic_id(app, request)
         if not clinic_id:
             return not_found("No clinic found")
 
@@ -132,7 +136,7 @@ def update_mine(app, request):
 def upload_logo(app, request):
     """POST /api/clinics/me/logo — Upload clinic logo to Stratus."""
     try:
-        clinic_id, user = get_clinic_id(app)
+        clinic_id, user = get_clinic_id(app, request)
         if not clinic_id:
             return not_found("No clinic found")
 

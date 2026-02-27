@@ -5,6 +5,14 @@ from utils.constants import TABLE_CLINICS
 logger = logging.getLogger(__name__)
 
 
+def _is_local_dev(request):
+    """Check if the request is from local development (catalyst serve)."""
+    if request is None:
+        return False
+    host = request.headers.get("Host", "")
+    return host.startswith("localhost") or host.startswith("127.0.0.1")
+
+
 def get_current_user(app):
     """Get the currently authenticated Catalyst user."""
     try:
@@ -16,7 +24,7 @@ def get_current_user(app):
         return None
 
 
-def get_clinic_id(app):
+def get_clinic_id(app, request=None):
     """
     Resolve the clinic_id for the current authenticated user.
     Looks up the Clinics table where admin_user_id matches the current user.
@@ -43,27 +51,28 @@ def get_clinic_id(app):
                 logger.error(f"Failed to resolve clinic_id: {e}")
                 return None, user
 
-    # Dev fallback: no auth available, use the first clinic in the table
-    try:
-        zcql = app.zcql()
-        result = zcql.execute_query(
-            f"SELECT ROWID FROM {TABLE_CLINICS} LIMIT 1"
-        )
-        if result and len(result) > 0:
-            clinic_id = str(result[0][TABLE_CLINICS]["ROWID"])
-            logger.info(f"Dev mode: using first clinic {clinic_id}")
-            return clinic_id, {"user_id": "dev", "email": "dev@local"}
-    except Exception as e:
-        logger.warning(f"Dev fallback failed: {e}")
+    # Dev fallback ONLY for local development (catalyst serve)
+    if _is_local_dev(request):
+        try:
+            zcql = app.zcql()
+            result = zcql.execute_query(
+                f"SELECT ROWID FROM {TABLE_CLINICS} LIMIT 1"
+            )
+            if result and len(result) > 0:
+                clinic_id = str(result[0][TABLE_CLINICS]["ROWID"])
+                logger.info(f"Dev mode: using first clinic {clinic_id}")
+                return clinic_id, {"user_id": "dev", "email": "dev@local"}
+        except Exception as e:
+            logger.warning(f"Dev fallback failed: {e}")
 
     return None, None
 
 
-def require_clinic(app):
+def require_clinic(app, request=None):
     """
     Get clinic_id or raise an error. Use this in routes that require
     a registered clinic.
     Returns (clinic_id, user) or (None, None).
     """
-    clinic_id, user = get_clinic_id(app)
+    clinic_id, user = get_clinic_id(app, request)
     return clinic_id, user

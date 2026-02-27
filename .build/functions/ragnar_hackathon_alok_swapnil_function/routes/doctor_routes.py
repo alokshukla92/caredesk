@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def list_all(app, request):
     """GET /api/doctors — List all doctors for the clinic."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found. Register first.", 403)
 
@@ -45,7 +45,7 @@ def list_all(app, request):
 def create(app, request):
     """POST /api/doctors — Add a new doctor."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -89,7 +89,7 @@ def create(app, request):
 def update(app, request, doctor_id):
     """PUT /api/doctors/:id — Update a doctor."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -128,7 +128,7 @@ def update(app, request, doctor_id):
 def delete(app, request, doctor_id):
     """DELETE /api/doctors/:id — Remove a doctor."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 

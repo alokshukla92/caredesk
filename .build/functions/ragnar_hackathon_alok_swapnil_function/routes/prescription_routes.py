@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def create(app, request):
     """POST /api/prescriptions — Create a new prescription."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -154,7 +154,7 @@ def create(app, request):
 def get_one(app, request, prescription_id):
     """GET /api/prescriptions/:id — Get a prescription."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -209,7 +209,7 @@ def get_one(app, request, prescription_id):
 def by_patient(app, request, patient_id):
     """GET /api/prescriptions/patient/:id — Patient's prescription history."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 

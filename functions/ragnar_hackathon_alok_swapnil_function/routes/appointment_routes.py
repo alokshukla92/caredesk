@@ -37,7 +37,7 @@ def _generate_token(app, clinic_id, appointment_date):
 def list_today(app, request):
     """GET /api/appointments — List today's appointments."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -91,7 +91,7 @@ def list_today(app, request):
 def create(app, request):
     """POST /api/appointments — Book a new appointment."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -171,7 +171,7 @@ def create(app, request):
 def update_status(app, request, appointment_id):
     """PUT /api/appointments/:id — Update appointment status."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 
@@ -233,7 +233,7 @@ def update_status(app, request, appointment_id):
 def get_queue(app, request):
     """GET /api/appointments/queue — Get live queue for today."""
     try:
-        clinic_id, user = require_clinic(app)
+        clinic_id, user = require_clinic(app, request)
         if not clinic_id:
             return error("No clinic found", 403)
 

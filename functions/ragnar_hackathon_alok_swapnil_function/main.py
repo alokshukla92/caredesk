@@ -17,7 +17,7 @@ def handler(request: Request):
     Main request router for CareDesk HMS.
     Routes incoming requests to the appropriate handler based on path and method.
     """
-    app = zcatalyst_sdk.initialize()
+    app = zcatalyst_sdk.initialize(req=request)
     path = request.path
     method = request.method.upper()
 
@@ -138,6 +138,67 @@ def handler(request: Request):
 
     if path == "/api/verify-tables" and method == "GET":
         return _verify_tables(app)
+
+    # ── Debug: Who Am I ───────────────────────────────────────────
+
+    if path == "/api/debug/whoami" and method == "GET":
+        from services.auth_service import get_current_user, get_clinic_id
+        try:
+            user = get_current_user(app)
+            user_id = str(user.get("user_id", "")) if user else None
+
+            # Manually trace clinic lookup
+            trace = []
+            zcql = app.zcql()
+
+            if user_id:
+                trace.append(f"Looking up clinic with admin_user_id = '{user_id}'")
+                lookup = zcql.execute_query(
+                    f"SELECT ROWID, name, admin_user_id FROM Clinics "
+                    f"WHERE admin_user_id = '{user_id}'"
+                )
+                trace.append(f"Query returned: {lookup}")
+                if lookup and len(lookup) > 0:
+                    trace.append(f"Found clinic: {lookup[0]['Clinics']}")
+                else:
+                    trace.append("No clinic found for this user_id")
+            else:
+                trace.append("No user_id available")
+
+            # Also call get_clinic_id to see what it returns
+            clinic_id, clinic_user = get_clinic_id(app, request)
+            trace.append(f"get_clinic_id returned: clinic_id={clinic_id}")
+
+            clinics = zcql.execute_query(
+                "SELECT ROWID, name, slug, admin_user_id FROM Clinics"
+            )
+            clinic_list = []
+            for row in (clinics or []):
+                c = row["Clinics"]
+                clinic_list.append({
+                    "id": c["ROWID"],
+                    "name": c["name"],
+                    "admin_user_id": c["admin_user_id"],
+                    "match": c["admin_user_id"] == user_id,
+                })
+            return make_response(jsonify({
+                "user_from_sdk": {
+                    "user_id": user_id,
+                    "email": user.get("email_id") if user else None,
+                },
+                "resolved_clinic_id": clinic_id,
+                "host": request.headers.get("Host", ""),
+                "is_local_dev": request.headers.get("Host", "").startswith("localhost") or request.headers.get("Host", "").startswith("127.0.0.1"),
+                "trace": trace,
+                "clinics_in_db": clinic_list,
+            }), 200)
+        except Exception as e:
+            import traceback
+            return make_response(jsonify({
+                "status": "error",
+                "error": str(e),
+                "traceback": traceback.format_exc(),
+            }), 200)
 
     # ── Health Check ────────────────────────────────────────────────
 
