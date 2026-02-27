@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchPublicAPI } from '../../api';
 import { Activity, RefreshCw } from 'lucide-react';
+import ConvoKraftBot from '../../components/ConvoKraftBot';
 
 export default function QueueDisplayPage() {
   const { slug } = useParams();
@@ -82,6 +83,7 @@ export default function QueueDisplayPage() {
           <p className="text-xl text-gray-500">No patients in queue</p>
         </div>
       )}
+      <ConvoKraftBot />
     </div>
   );
 }

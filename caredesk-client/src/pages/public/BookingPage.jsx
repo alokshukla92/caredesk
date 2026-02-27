@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchPublicAPI } from '../../api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import ConvoKraftBot from '../../components/ConvoKraftBot';
 import { Activity, CalendarDays, CheckCircle } from 'lucide-react';
 import { useToast } from '../../components/Toast';
 import { GENDERS } from '../../utils/constants';
@@ -133,6 +134,7 @@ export default function BookingPage() {
           </button>
         </form>
       </div>
+      <ConvoKraftBot />
     </div>
   );
 }
