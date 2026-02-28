@@ -1,0 +1,16 @@
+{
+	"deployment": {
+		"name": "convo_kraft",
+		"stack": "python_3_9",
+		"type": "integration",
+		"env_variables": {},
+		"integration_config": [
+			{
+				"service": "Convokraft"
+			}
+		]
+	},
+	"execution": {
+		"main": "main.py"
+	}
+}

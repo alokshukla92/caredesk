@@ -1,0 +1,15 @@
+{
+	"deployment": {
+		"name": "ragnar_hackathon_alok_swapnil_function",
+		"stack": "python_3_9",
+		"type": "advancedio",
+		"env_variables": {
+			"TWILIO_ACCOUNT_SID": "",
+			"TWILIO_AUTH_TOKEN": "",
+			"TWILIO_FROM_NUMBER": ""
+		}
+	},
+	"execution": {
+		"main": "main.py"
+	}
+}

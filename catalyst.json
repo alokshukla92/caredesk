@@ -1,0 +1,22 @@
+{
+  "functions": {
+    "targets": [
+      "ragnar_hackathon_alok_swapnil_function",
+      "convo_kraft"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "caredesk-client/dist"
+  },
+  "slate": [
+    {
+      "name": "caredesk-client",
+      "source": "/home/swapnilg45/zoho/caredesk-client"
+    }
+  ],
+  "apig": {
+    "enabled": false
+  }
+}

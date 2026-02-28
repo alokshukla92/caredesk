@@ -1,0 +1,2 @@
+zcatalyst-cliq==1.0.0
+zcatalyst-sdk==0.0.2
