@@ -156,6 +156,9 @@ def handler(request: Request):
     if path == "/api/seed-demo" and method == "POST":
         return seed_routes.seed_demo(app, request)
 
+    if path == "/api/seed-multi-tenant" and method == "POST":
+        return seed_routes.seed_multi_tenant(app, request)
+
     # ── Cron / Job Scheduling Routes ───────────────────────────────
 
     if path == "/api/cron/follow-up-reminders" and method == "GET":
