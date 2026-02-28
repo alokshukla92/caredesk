@@ -156,7 +156,7 @@ export default function ConsultationPage() {
             {form.medicines.map((med, idx) => (
               <div key={idx} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                 {/* Row 1: Name + Dosage + Delete */}
-                <div className="mb-3 flex gap-2">
+                <div className="mb-3 flex flex-col sm:flex-row gap-2">
                   <div className="flex-1">
                     <label className="mb-1 block text-[10px] font-semibold uppercase text-gray-400">Medicine Name</label>
                     <input
@@ -166,7 +166,7 @@ export default function ConsultationPage() {
                       className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
                     />
                   </div>
-                  <div className="w-28">
+                  <div className="sm:w-28">
                     <label className="mb-1 block text-[10px] font-semibold uppercase text-gray-400">Dosage</label>
                     <input
                       placeholder="e.g. 500mg"
@@ -176,7 +176,7 @@ export default function ConsultationPage() {
                     />
                   </div>
                   {form.medicines.length > 1 && (
-                    <button type="button" onClick={() => removeMedicine(idx)} className="mt-5 rounded-lg p-2 text-red-400 hover:bg-red-50 hover:text-red-600">
+                    <button type="button" onClick={() => removeMedicine(idx)} className="self-end sm:mt-5 rounded-lg p-2 text-red-400 hover:bg-red-50 hover:text-red-600">
                       <Trash2 size={16} />
                     </button>
                   )}
@@ -225,7 +225,7 @@ export default function ConsultationPage() {
                       placeholder="e.g. 5 days"
                       value={med.duration}
                       onChange={(e) => updateMedicine(idx, 'duration', e.target.value)}
-                      className="w-28 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+                      className="w-full sm:w-28 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export default function ConsultationPage() {
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">Follow-up Date</label>
             <input type="date" value={form.follow_up_date} onChange={(e) => setForm({ ...form, follow_up_date: e.target.value })}
-              className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+              className="w-full sm:w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
           </div>
         </div>
 

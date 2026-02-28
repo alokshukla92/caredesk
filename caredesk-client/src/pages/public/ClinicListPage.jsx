@@ -51,7 +51,7 @@ export default function ClinicListPage() {
           <div className="space-y-4">
             {filtered.map((c) => (
               <div key={c.id} className="rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                   <div className="flex-1">
                     <h2 className="text-lg font-bold text-gray-900">{c.name}</h2>
                     {c.address && (
@@ -70,16 +70,16 @@ export default function ClinicListPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="ml-4 flex flex-col gap-2">
+                  <div className="flex sm:flex-col gap-2">
                     <Link
                       to={`/book/${c.slug}`}
-                      className="flex items-center gap-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
+                      className="flex items-center justify-center gap-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 flex-1 sm:flex-none"
                     >
                       Book Now <ArrowRight size={14} />
                     </Link>
                     <Link
                       to={`/queue-display/${c.slug}`}
-                      className="rounded-lg border border-gray-200 px-4 py-2 text-center text-xs font-medium text-gray-600 hover:bg-gray-50"
+                      className="rounded-lg border border-gray-200 px-4 py-2 text-center text-xs font-medium text-gray-600 hover:bg-gray-50 flex-1 sm:flex-none"
                     >
                       View Queue
                     </Link>

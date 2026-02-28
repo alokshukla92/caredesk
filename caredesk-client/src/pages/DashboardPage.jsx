@@ -89,7 +89,7 @@ function HourlyHeatmap({ peakHours }) {
 
   return (
     <div>
-      <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(13, 1fr)' }}>
+      <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))' }}>
         {hours.map((h) => (
           <div
             key={h.hour}
@@ -276,7 +276,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Row 1: Core Stats */}
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <MiniCard icon={CalendarDays} label="Total Appointments" value={s.total_appointments_today} color="blue" />
         <MiniCard icon={ListOrdered} label="In Queue" value={s.in_queue} sub={s.in_consultation > 0 ? `${s.in_consultation} with doctor` : undefined} color="yellow" />
         <MiniCard icon={CheckCircle} label="Completed" value={s.completed} sub={`${s.completion_rate}% rate`} color="green" />
@@ -284,7 +284,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Row 2: Secondary Stats */}
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <MiniCard icon={Users} label="Total Patients" value={s.total_patients} color="teal" />
         <MiniCard icon={Stethoscope} label="Active Doctors" value={s.total_doctors} color="blue" />
         <MiniCard icon={Pill} label="Prescriptions" value={s.prescriptions_today} sub="today" color="purple" />
@@ -299,7 +299,7 @@ export default function DashboardPage() {
 
       {/* Row 3: Alerts - No Shows & Cancellations */}
       {(s.no_show > 0 || s.cancelled > 0) && (
-        <div className="grid gap-3 grid-cols-2">
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
           {s.cancelled > 0 && (
             <div className="flex items-center gap-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
               <XCircle size={18} className="text-red-500 shrink-0" />

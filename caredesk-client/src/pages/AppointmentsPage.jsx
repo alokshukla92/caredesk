@@ -272,7 +272,8 @@ export default function AppointmentsPage() {
 
         {/* Appointments table */}
         {!isCollapsed && (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px] text-sm">
             <thead className="bg-gray-50/80">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Token</th>
@@ -286,6 +287,7 @@ export default function AppointmentsPage() {
               {group.appointments.map(a => renderRow(a, false))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     );
@@ -434,8 +436,8 @@ export default function AppointmentsPage() {
         </div>
       ) : (
         // ──── Flat table view ────
-        <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
+          <table className="w-full min-w-[700px] text-sm">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Token</th>
@@ -521,7 +523,7 @@ export default function AppointmentsPage() {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">Time Slot *</label>
                   {timeSlots.length > 0 ? (
-                    <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-40 overflow-y-auto">
                       {timeSlots.map((slot) => {
                         const isToday = form.appointment_date === today;
                         const [sh, sm] = slot.value.split(':').map(Number);

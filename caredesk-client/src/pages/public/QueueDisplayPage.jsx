@@ -56,14 +56,14 @@ export default function QueueDisplayPage() {
   const totalActive = (data.now_serving?.length || 0) + (data.waiting?.length || 0);
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="min-h-screen bg-gray-900 p-4 sm:p-6">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <Activity className="text-teal-400" size={32} />
+          <Activity className="text-teal-400 shrink-0" size={28} />
           <div>
-            <h1 className="text-2xl font-bold text-white">{data.clinic_name}</h1>
-            <p className="text-sm text-gray-400">Live Queue — {data.date}</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">{data.clinic_name}</h1>
+            <p className="text-xs sm:text-sm text-gray-400">Live Queue — {data.date}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-gray-500">
@@ -74,9 +74,9 @@ export default function QueueDisplayPage() {
 
       {/* Doctor-wise Queue Sections */}
       {doctorQueues.length > 0 ? (
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {doctorQueues.map((dq) => (
-            <div key={dq.doctor} className="rounded-2xl border border-gray-700 bg-gray-800/50 p-6">
+            <div key={dq.doctor} className="rounded-2xl border border-gray-700 bg-gray-800/50 p-4 sm:p-6">
               {/* Doctor Name */}
               <div className="mb-5 flex items-center gap-2 border-b border-gray-700 pb-3">
                 <UserRound size={18} className="text-teal-400" />

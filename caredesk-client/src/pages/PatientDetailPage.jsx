@@ -82,8 +82,8 @@ export default function PatientDetailPage() {
             <p className="text-gray-500">No appointments found for this patient.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
+            <table className="w-full min-w-[600px] text-sm">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-gray-600">Date</th>
